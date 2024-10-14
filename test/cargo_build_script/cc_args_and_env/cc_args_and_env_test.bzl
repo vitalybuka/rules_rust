@@ -83,7 +83,7 @@ def _cc_args_and_env_analysis_test_impl(ctx):
     env = analysistest.begin(ctx)
     tut = analysistest.target_under_test(env)
     cargo_action = tut[DepActionsInfo].actions[0]
-    cflags = cargo_action.env["CFLAGS"]
+    cflags = cargo_action.env["CFLAGS"].split(" ")
     for flag in ctx.attr.expected_cflags:
         asserts.true(
             env,
@@ -181,7 +181,7 @@ def isystem_relative_test(name):
     cc_args_and_env_analysis_test(
         name = name,
         target_under_test = "%s/cargo_build_script" % name,
-        expected_cflags = ["-isystem ${pwd}/test/relative/path"],
+        expected_cflags = ["-isystem", "${pwd}/test/relative/path"],
     )
 
 def isystem_absolute_test(name):
@@ -192,7 +192,7 @@ def isystem_absolute_test(name):
     cc_args_and_env_analysis_test(
         name = name,
         target_under_test = "%s/cargo_build_script" % name,
-        expected_cflags = ["-isystem /test/absolute/path"],
+        expected_cflags = ["-isystem", "/test/absolute/path"],
     )
 
 def fsanitize_ignorelist_relative_test(name):
