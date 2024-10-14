@@ -173,6 +173,17 @@ def sysroot_absolute_test(name):
         expected_cflags = ["--sysroot=/test/absolute/sysroot"],
     )
 
+def sysroot_absolute2_test(name):
+    cargo_build_script_with_extra_cc_compile_flags(
+        name = "%s/cargo_build_script" % name,
+        extra_cc_compile_flags = ["--sysroot=/test/absolute/sysroot", "test/relative/another"],
+    )
+    cc_args_and_env_analysis_test(
+        name = name,
+        target_under_test = "%s/cargo_build_script" % name,
+        expected_cflags = ["--sysroot=/test/absolute/sysroot", "test/relative/another"],
+    )
+
 def isystem_relative_test(name):
     cargo_build_script_with_extra_cc_compile_flags(
         name = "%s/cargo_build_script" % name,
